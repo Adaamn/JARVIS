@@ -5,14 +5,10 @@ api-version: '1.21'
 
 commands:
   sinfo:
-    description: Shows server info
     permission: sinfo.use
-
-  adam:
-    description: Tajnej command
-
-  zpravicka:
-    description: Global message
+  jarvis:
+  suitup:
+  shoot:
 
 permissions:
   sinfo.use:
