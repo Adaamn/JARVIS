@@ -1,4 +1,5 @@
 name: JARVIS
+description: 'Made by Stark Industries'
 version: '1.0-SNAPSHOT'
 main: cz.adaamn.JARVIS.jarvis
 api-version: '1.21'
