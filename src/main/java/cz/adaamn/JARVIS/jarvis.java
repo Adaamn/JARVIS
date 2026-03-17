@@ -1,4 +1,4 @@
-package cz.adaamn.serverInfo;
+package cz.adaamn.JARVIS;
 
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.*;
@@ -15,7 +15,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
-public final class ServerInfo extends JavaPlugin implements Listener {
+public final class jarvis extends JavaPlugin implements Listener {
 
     @Override
     public void onEnable() {
@@ -24,7 +24,7 @@ public final class ServerInfo extends JavaPlugin implements Listener {
         registraceCommandu("jarvis");
         registraceCommandu("suitup");
         registraceCommandu("shoot");
-        getLogger().info("SInfo is enabled.");
+        getLogger().info("JARVIS is enabled.");
     }
 
     private void registraceCommandu(String name) {
@@ -37,7 +37,7 @@ public final class ServerInfo extends JavaPlugin implements Listener {
 
     @Override
     public void onDisable() {
-        getLogger().info("SInfo is disabled.");
+        getLogger().info("JARVIS is disabled.");
     }
 
     @Override
@@ -66,7 +66,7 @@ public final class ServerInfo extends JavaPlugin implements Listener {
 
         if (command.getName().equalsIgnoreCase("jarvis")) {
             if (!(sender instanceof Player)) {
-                sender.sendMessage("Jarvis funguje pro lidi, ne pro konzoli!");
+                sender.sendMessage("Tohle může jenom hráč!");
             return true;
             }
 
@@ -102,7 +102,7 @@ public final class ServerInfo extends JavaPlugin implements Listener {
 
         if (command.getName().equalsIgnoreCase("suitup")) {
             if (!(sender instanceof Player)){
-                sender.sendMessage("Tohle muze jenom hrac!");
+                sender.sendMessage("Tohle může jenom hráč!");
                 return true;
             }
 
