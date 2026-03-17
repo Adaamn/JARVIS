@@ -1,4 +1,4 @@
-name: ServerInfo
+name: JARVIS
 version: '1.0-SNAPSHOT'
 main: cz.adaamn.JARVIS.jarvis
 api-version: '1.21'
