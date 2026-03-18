@@ -9,8 +9,6 @@ commands:
   sinfo:
     permission: sinfo.use
   jarvis:
-  suitup:
-  shoot:
 
 permissions:
   sinfo.use:

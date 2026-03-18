@@ -4,10 +4,13 @@ import net.md_5.bungee.api.ChatColor;
 import org.bukkit.*;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.command.TabCompleter;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.SmallFireball;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerToggleFlightEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -15,15 +18,17 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
-public final class jarvis extends JavaPlugin implements Listener {
+import java.util.List;
+
+public final class jarvis extends JavaPlugin implements Listener, TabCompleter {
 
     @Override
     public void onEnable() {
         getServer().getPluginManager().registerEvents(this, this);
         registraceCommandu("sinfo");
         registraceCommandu("jarvis");
-        registraceCommandu("suitup");
-        registraceCommandu("shoot");
+        getCommand("jarvis").setTabCompleter(this);
+
         getLogger().info("JARVIS is enabled.");
     }
 
@@ -40,12 +45,22 @@ public final class jarvis extends JavaPlugin implements Listener {
         getLogger().info("JARVIS is disabled.");
     }
 
+
+    @EventHandler
+    public void onJoin(PlayerJoinEvent event) {
+        Player player = event.getPlayer();
+        player.sendMessage("");
+        player.sendMessage(" §7Napis §e/jarvis <prikaz> §7abys byl ironman");
+        player.sendMessage("");
+    }
+
+
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         if (command.getName().equalsIgnoreCase("sinfo")) {
 
             if (!sender.hasPermission("sinfo.use")) {
-                sender.sendMessage("§cYou dont have permission to use this plugin");
+                sender.sendMessage("§cNemáš právo použít tenhle příkaz!");
                 return true;
             }
 
@@ -67,98 +82,149 @@ public final class jarvis extends JavaPlugin implements Listener {
         if (command.getName().equalsIgnoreCase("jarvis")) {
             if (!(sender instanceof Player)) {
                 sender.sendMessage("Tohle může jenom hráč!");
-            return true;
+                return true;
             }
+            String PREFIX = "§e§lJARVIS: §7";
 
-            Player player = (Player) sender;
-
-            if (player.getAllowFlight()) {
-                player.setFlying(false);
-                player.setAllowFlight(false);
-                String zprava = "§e§lJARVIS: §7Hráč §e" + player.getName() + " §7přestal létat.";
-                Bukkit.getServer().broadcastMessage(ChatColor.translateAlternateColorCodes('&', zprava));
-            }
-            else {
-                player.setAllowFlight(true);
-                player.setFlying(true);
-                player.playSound(player.getLocation(), Sound.BLOCK_BEACON_ACTIVATE, 1.0f, 1.0f);
-                player.playSound(player.getLocation(), Sound.ENTITY_BLAZE_SHOOT, 1.0f, 1.0f);
-                player.getWorld().spawnParticle(Particle.SOUL_FIRE_FLAME, player.getLocation(), 50);
-                player.getWorld().spawnParticle(Particle.CLOUD, player.getLocation(), 50);
-                player.sendMessage(" ");
-                player.sendMessage("§7[§c!§7] §7Připojuju se do NASA...");
-                player.sendMessage("§7[§c!§7] §7Prohledávám Mikyho harddrive...");
-                player.sendMessage("§7[§c!§7] §7Nalezeno 21 fotek chodidel...");
-                player.sendMessage("§7[§c!§7] §7Uloženo 21 neznámých fotek na C:/Users/Adam...");
-                player.sendMessage("§7[§c!§7] §7Hackuju Danovo škodovku...");
-                player.sendMessage(" ");
-                String zprava = "§e§lJARVIS: §7Hráč §e" + player.getName() + " §7začal létat.";
-                Bukkit.getServer().broadcastMessage(ChatColor.translateAlternateColorCodes('&', zprava));
-            }
-            return true;
-        }
-
-
-
-        if (command.getName().equalsIgnoreCase("suitup")) {
-            if (!(sender instanceof Player)){
-                sender.sendMessage("Tohle může jenom hráč!");
+            if (args.length == 0) {
+                sender.sendMessage(PREFIX + "Musíš napsat argument..");
                 return true;
             }
 
-            Player player = (Player) sender;
+            if (args[0].equalsIgnoreCase("start")) {
 
-            if (player.getInventory().getChestplate() == null) {
+                Player player = (Player) sender;
 
-                player.setAllowFlight(true);
-                player.getInventory().setHelmet(new ItemStack(Material.GOLDEN_HELMET));
-                player.getInventory().setChestplate(new ItemStack(Material.IRON_CHESTPLATE));
-                player.getInventory().setLeggings(new ItemStack(Material.IRON_LEGGINGS));
-                player.getInventory().setBoots(new ItemStack(Material.IRON_BOOTS));
-                player.sendMessage("§e§lJARVIS: §7Nasazuju oblek..");
+                player.playSound(player.getLocation(), Sound.BLOCK_METAL_FALL, 1.0f, 1.0f);
+                player.sendMessage(" ");
+                /*
+                player.sendMessage(PREFIX + "Connecting to Stark Industries drones..");
+                player.sendMessage(PREFIX + "Connected to Stark Industries drones..");
+                player.sendMessage(PREFIX + "All systems operational..");
+                */
 
-                player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_NETHERITE, 1.0f, 1.0f);
-                player.spawnParticle(Particle.FLAME, player.getLocation(), 50);
+                player.sendMessage(" ");
 
-                player.setHealth(20.0);
-                player.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, 99999, 4));
-            }
-            else {
-                player.setAllowFlight(false);
-                player.getInventory().setHelmet(null);
-                player.getInventory().setChestplate(null);
-                player.getInventory().setLeggings(null);
-                player.getInventory().setBoots(null);
-                player.sendMessage("§e§lJARVIS: §7Sundavam oblek..");
+                Location locY = player.getLocation();
 
-                player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1.0f, 1.0f);
-                player.removePotionEffect(PotionEffectType.ABSORPTION);
-            }
-            return true;
-        }
+                locY.setY(locY.getY() + 100);
+                player.teleport(locY);
 
-        if (command.getName().equalsIgnoreCase("shoot")) {
-            if (!(sender instanceof Player)) {
-                sender.sendMessage("Tohle může jenom hráč!");
                 return true;
             }
-            Player player = (Player) sender;
+
+            if (args[0].equalsIgnoreCase("fly")) {
+
+                Player player = (Player) sender;
+
+                if (player.getAllowFlight()) {
+                    player.setFlying(false);
+                    player.setAllowFlight(false);
+                    String zprava = "§e§lJARVIS: §7Hráč §e" + player.getName() + " §7přestal létat.";
+                    Bukkit.getServer().broadcastMessage(ChatColor.translateAlternateColorCodes('&', zprava));
+                } else {
+                    player.setAllowFlight(true);
+                    player.playSound(player.getLocation(), Sound.BLOCK_BEACON_ACTIVATE, 1.0f, 1.0f);
+                    player.playSound(player.getLocation(), Sound.ENTITY_BLAZE_SHOOT, 1.0f, 1.0f);
+                    player.getWorld().spawnParticle(Particle.SOUL_FIRE_FLAME, player.getLocation(), 50);
+                    player.getWorld().spawnParticle(Particle.CLOUD, player.getLocation(), 50);
+                    /*
+                    player.sendMessage(" ");
+                    player.sendMessage("§7[§c!§7] §7Připojuju se do NASA...");
+                    player.sendMessage("§7[§c!§7] §7Prohledávám Mikyho harddrive...");
+                    player.sendMessage("§7[§c!§7] §7Nalezeno 21 fotek chodidel...");
+                    player.sendMessage("§7[§c!§7] §7Uloženo 21 neznámých fotek na C:/Users/Adam...");
+                    player.sendMessage("§7[§c!§7] §7Hackuju Danovo škodovku...");
+                    player.sendMessage(" ");
+                    */
+                    String zprava = "§e§lJARVIS: §7Hráč §e" + player.getName() + " §7začal létat.";
+
+                    Bukkit.getServer().broadcastMessage(ChatColor.translateAlternateColorCodes('&', zprava));
+                }
+                return true;
+            }
+
+            if (args[0].equalsIgnoreCase("suitup")) {
+
+                Player player = (Player) sender;
+
+                if (player.getInventory().getChestplate() == null) {
+
+                    player.setAllowFlight(true);
+                    player.getInventory().setHelmet(new ItemStack(Material.GOLDEN_HELMET));
+                    player.getInventory().setChestplate(new ItemStack(Material.IRON_CHESTPLATE));
+                    player.getInventory().setLeggings(new ItemStack(Material.IRON_LEGGINGS));
+                    player.getInventory().setBoots(new ItemStack(Material.IRON_BOOTS));
+                    player.sendMessage("§e§lJARVIS: §7Nasazuju oblek..");
+
+                    player.playSound(player.getLocation(), Sound.ITEM_ARMOR_EQUIP_NETHERITE, 1.0f, 1.0f);
+                    player.spawnParticle(Particle.FLAME, player.getLocation(), 50);
+
+                    player.setHealth(20.0);
+                    player.addPotionEffect(new PotionEffect(PotionEffectType.ABSORPTION, 99999, 4));
+                } else {
+                    player.setAllowFlight(false);
+                    player.getInventory().setHelmet(null);
+                    player.getInventory().setChestplate(null);
+                    player.getInventory().setLeggings(null);
+                    player.getInventory().setBoots(null);
+                    player.sendMessage("§e§lJARVIS: §7Sundavam oblek..");
+
+                    player.playSound(player.getLocation(), Sound.BLOCK_ANVIL_USE, 1.0f, 1.0f);
+                    player.removePotionEffect(PotionEffectType.ABSORPTION);
+                }
+                return true;
+            }
 
 
-            if (player.getInventory().getChestplate() != null) {
-                SmallFireball strela = player.launchProjectile(SmallFireball.class);
-                strela.setIsIncendiary(false);
-                player.playSound(player.getLocation(), Sound.ENTITY_GHAST_SHOOT, 1.0f, 1.0f);
+            if (args[0].equalsIgnoreCase("shoot")) {
+                Player player = (Player) sender;
 
-            } else {
-                sender.sendMessage("§e§lJARVIS: §7Musíš mít oblek.");
+
+                if (player.getInventory().getChestplate() != null) {
+                    SmallFireball strela = player.launchProjectile(SmallFireball.class);
+                    strela.setIsIncendiary(false);
+                    player.playSound(player.getLocation(), Sound.ENTITY_GHAST_SHOOT, 1.0f, 1.0f);
+
+                } else {
+                    sender.sendMessage("§e§lJARVIS: §7Musíš mít oblek.");
+                }
+                return true;
+            }
+
+
+            if (args[0].equalsIgnoreCase("scan")) {
+                Player player = (Player) sender;
+                int pocet = 0;
+                for (Entity e : player.getNearbyEntities(100, 100, 100)) {
+                    if (e instanceof Player) {
+
+                        player.sendMessage(PREFIX + "Byl nalezen hráč §e" + e.getName() + "§7, na §eX:" + (int)e.getLocation().getX() + " Y:" + (int)e.getLocation().getY() + " Z:" +(int)e.getLocation().getZ());
+                        pocet++;
+                    }
+                }
+
+                if (pocet == 0) {
+                    player.sendMessage(PREFIX + "Žádný hráč v okolí");
+                }
             }
             return true;
         }
-
-
         return false;
     }
+
+
+    @Override
+    public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+        if (command.getName().equalsIgnoreCase("jarvis")) {
+            if (args.length == 1) {
+                return List.of("start", "fly", "suitup", "shoot", "scan");
+            }
+        }
+        return List.of();
+    }
+
+
 
 
     @EventHandler
