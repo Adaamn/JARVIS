@@ -6,12 +6,16 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.SmallFireball;
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerToggleFlightEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.PlayerDeathEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
@@ -46,13 +50,53 @@ public final class jarvis extends JavaPlugin implements Listener, TabCompleter {
     }
 
 
-    @EventHandler
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         player.sendMessage("");
-        player.sendMessage(" §7Napis §e/jarvis <prikaz> §7abys byl ironman");
+        player.sendMessage(" §e➤ §7Napis §e/jarvis <prikaz> §7abys byl ironman");
         player.sendMessage("");
+
+        player.getInventory().clear();
+        player.getInventory().setHeldItemSlot(0);
+        player.getInventory().setItem(0, new ItemStack(Material.BOOK));
     }
+
+    @EventHandler
+    public void random(PlayerBedEnterEvent event) {
+        Player player = event.getPlayer();
+        if (event.getBedEnterResult() != PlayerBedEnterEvent.BedEnterResult.OK) {
+            return;
+        }
+        String msg = "&e&lALERT: &e" + player.getName() + " &7jde spat";
+        Bukkit.getServer().broadcastMessage(ChatColor.translateAlternateColorCodes('&', msg));
+        player.getWorld().playSound(player.getLocation(), Sound.ENTITY_PHANTOM_AMBIENT, 1.0f, 1.0f);
+    }
+/*
+    @EventHandler
+    public void onInventoryClick(InventoryClickEvent event) {
+        Player player = (Player) event.getWhoClicked();
+
+        if (event.getInventory() == player.getInventory()) {
+            if (event.getCurrentItem() != null && event.getCurrentItem().getType() == Material.BOOK) {
+                event.setCancelled(true);
+            }
+
+            if (event.getCursor() != null && event.getCursor().getType() == Material.BOOK) {
+                event.setCancelled(true);
+            }
+        }
+    }
+
+    @EventHandler
+    public void onDrop(PlayerDropItemEvent event) {
+        if (event.getItemDrop().getItemStack().getType() == Material.BOOK) {
+            event.setCancelled(true);
+        }
+    }
+
+*/
+
 
 
     @Override
@@ -207,8 +251,9 @@ public final class jarvis extends JavaPlugin implements Listener, TabCompleter {
                 if (pocet == 0) {
                     player.sendMessage(PREFIX + "Žádný hráč v okolí");
                 }
+                return true;
             }
-            return true;
+
         }
         return false;
     }
