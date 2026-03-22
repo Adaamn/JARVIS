@@ -9,6 +9,7 @@ commands:
   sinfo:
     permission: sinfo.use
   jarvis:
+  kdeje:
 
 permissions:
   sinfo.use:

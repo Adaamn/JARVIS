@@ -31,6 +31,7 @@ public final class jarvis extends JavaPlugin implements Listener, TabCompleter {
     public void onEnable() {
         getServer().getPluginManager().registerEvents(this, this);
         registraceCommandu("sinfo");
+        registraceCommandu("kdeje");
         registraceCommandu("jarvis");
         getCommand("jarvis").setTabCompleter(this);
 
@@ -110,6 +111,29 @@ public final class jarvis extends JavaPlugin implements Listener, TabCompleter {
 
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+
+        if (command.getName().equalsIgnoreCase("kdeje")) {
+            if (args.length==0) {
+                sender.sendMessage("§7Musis zadat jmeno");
+            }
+            else {
+                Player player = Bukkit.getPlayerExact(args[0]);
+                if (player != null) {
+                    if (player.getName().equals(sender.getName())) {
+                        sender.sendMessage("§7Nemuzes najit sam sebe");
+                    } else {
+                    Bukkit.getServer().broadcastMessage("§e" + sender.getName() + " §7hleda " + args[0] + ", ten se schovava na: §e"
+                            + (int) player.getLocation().getX() + " "
+                            + (int) player.getLocation().getY() + " "
+                            + (int) player.getLocation().getZ());
+                    }
+                } else {
+                    sender.sendMessage("§e" + args[0] + " §7neni na serveru");
+                }
+            }
+            return true;
+        }
+
         if (command.getName().equalsIgnoreCase("sinfo")) {
 
             if (!sender.hasPermission("sinfo.use")) {
