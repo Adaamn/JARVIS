@@ -25,6 +25,7 @@ import org.bukkit.util.Vector;
 import java.util.List;
 
 public final class jarvis extends JavaPlugin implements Listener, TabCompleter {
+    String PREFIX = "§e§lJARVIS: §7";
 
     @Override
     public void onEnable() {
@@ -72,6 +73,14 @@ public final class jarvis extends JavaPlugin implements Listener, TabCompleter {
         Bukkit.getServer().broadcastMessage(ChatColor.translateAlternateColorCodes('&', msg));
         player.getWorld().playSound(player.getLocation(), Sound.ENTITY_PHANTOM_AMBIENT, 1.0f, 1.0f);
     }
+
+
+    @EventHandler
+    public void onPlayerBedLeave(PlayerBedLeaveEvent event) {
+        Player player = event.getPlayer();
+        player.sendMessage(PREFIX + "Mazej do postele!");
+    }
+
 /*
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
@@ -128,7 +137,6 @@ public final class jarvis extends JavaPlugin implements Listener, TabCompleter {
                 sender.sendMessage("Tohle může jenom hráč!");
                 return true;
             }
-            String PREFIX = "§e§lJARVIS: §7";
 
             if (args.length == 0) {
                 sender.sendMessage(PREFIX + "Musíš napsat argument..");
