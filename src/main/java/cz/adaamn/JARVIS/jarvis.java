@@ -36,6 +36,8 @@ public final class jarvis extends JavaPlugin implements Listener, TabCompleter {
         registraceCommandu("kdoje");
         registraceCommandu("jarvis");
         getCommand("jarvis").setTabCompleter(this);
+        getCommand("kdoje").setTabCompleter(this);
+        getCommand("kdeje").setTabCompleter(this);
 
         getLogger().info("JARVIS is enabled.");
     }
@@ -63,7 +65,7 @@ public final class jarvis extends JavaPlugin implements Listener, TabCompleter {
 
         player.getInventory().clear();
         player.getInventory().setHeldItemSlot(0);
-        player.getInventory().setItem(0, new ItemStack(Material.BOOK));
+        player.getInventory().setItem(8, new ItemStack(Material.ENDER_CHEST));
     }
 
     @EventHandler
@@ -178,8 +180,9 @@ public final class jarvis extends JavaPlugin implements Listener, TabCompleter {
                     sender.sendMessage("§7Name: §e" + nevimbro.getName());
                     sender.sendMessage("§7HP: §e" + (int)nevimbro.getHealth());
                     sender.sendMessage("§7Gamemode: §e" + nevimbro.getGameMode());
-                    sender.sendMessage("§7Lokace: §e" + nevimbro.getWorld().getName() + " §7- §eX:" + (int)nevimbro.getLocation().getX() + " Y:" + (int)nevimbro.getLocation().getY() + " Z:" + (int)nevimbro.getLocation().getZ());
+                    sender.sendMessage("§7Lokace: §e" + nevimbro.getWorld().getName() + " §7- §e" + (int)nevimbro.getLocation().getX() + " " + (int)nevimbro.getLocation().getY() + " " + (int)nevimbro.getLocation().getZ());
                     sender.sendMessage("§7Ping: §e" + nevimbro.getPing());
+                    sender.sendMessage(" ");
 
                 }
             }
@@ -204,6 +207,7 @@ public final class jarvis extends JavaPlugin implements Listener, TabCompleter {
             sender.sendMessage("§7Server version: §e" + getServer().getVersion());
             sender.sendMessage("§7Online players: §e" + online + "§7/§e" + maxOnline);
             sender.sendMessage("§7Plugins: §e" + plugins);
+            sender.sendMessage("§7Version: §e" + getServer().getMinecraftVersion());
             sender.sendMessage(" ");
 
             return true;
@@ -352,6 +356,14 @@ public final class jarvis extends JavaPlugin implements Listener, TabCompleter {
                 return List.of("start", "fly", "suitup", "shoot", "scan");
             }
         }
+
+        if (command.getName().equalsIgnoreCase("kdoje")) {
+            return null;
+        }
+
+        if (command.getName().equalsIgnoreCase("kdeje")) {
+            return null;
+        }
         return List.of();
     }
 
@@ -369,7 +381,7 @@ public final class jarvis extends JavaPlugin implements Listener, TabCompleter {
                 player.setFlying(false);
 
                 long casTed = System.currentTimeMillis();
-                int cooldownCas = 2000;
+                int cooldownCas = 1500;
 
                 if (dashCooldown.containsKey(player.getUniqueId())) {
                     long posledniDash = dashCooldown.get(player.getUniqueId());
@@ -386,7 +398,7 @@ public final class jarvis extends JavaPlugin implements Listener, TabCompleter {
                 dashCooldown.put(player.getUniqueId(), casTed);
 
                 Vector dash = player.getLocation().getDirection().multiply(1.2);
-                dash.setY(0.7);
+                dash.setY(1);
                 player.setVelocity(dash);
                 player.playSound(player.getLocation(), Sound.ENTITY_FIREWORK_ROCKET_LAUNCH, 1.0f, 1.0f);
 
