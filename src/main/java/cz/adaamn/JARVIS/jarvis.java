@@ -32,6 +32,8 @@ public final class jarvis extends JavaPlugin implements Listener, TabCompleter {
         getServer().getPluginManager().registerEvents(this, this);
         registraceCommandu("sinfo");
         registraceCommandu("kdeje");
+        registraceCommandu("nickos");
+        registraceCommandu("kdoje");
         registraceCommandu("jarvis");
         getCommand("jarvis").setTabCompleter(this);
 
@@ -108,7 +110,6 @@ public final class jarvis extends JavaPlugin implements Listener, TabCompleter {
 */
 
 
-
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
@@ -120,9 +121,12 @@ public final class jarvis extends JavaPlugin implements Listener, TabCompleter {
                 Player player = Bukkit.getPlayerExact(args[0]);
                 if (player != null) {
                     if (player.getName().equals(sender.getName())) {
-                        sender.sendMessage("§7Nemuzes najit sam sebe");
+                        sender.sendMessage("§7Nachazis se na " + player.getWorld().getName() + ": §e"
+                                + (int) player.getLocation().getX() + " "
+                                + (int) player.getLocation().getY() + " "
+                                + (int) player.getLocation().getZ());
                     } else {
-                    Bukkit.getServer().broadcastMessage("§e" + sender.getName() + " §7hleda " + args[0] + ", ten se schovava na: §e"
+                    Bukkit.getServer().broadcastMessage("§e" + sender.getName() + " §7hleda " + args[0] + ", ten se schovava: " + player.getWorld().getName() + ": §e"
                             + (int) player.getLocation().getX() + " "
                             + (int) player.getLocation().getY() + " "
                             + (int) player.getLocation().getZ());
@@ -133,6 +137,56 @@ public final class jarvis extends JavaPlugin implements Listener, TabCompleter {
             }
             return true;
         }
+
+
+        if (command.getName().equalsIgnoreCase("nickos")) {
+            if (!(sender instanceof Player)) {
+                sender.sendMessage("Tohle může jenom hráč!");
+                return true;
+            }
+
+            Player player = (Player) sender;
+
+            if (args.length==0) {
+                player.sendMessage(PREFIX + "Musíš zadat nick!");
+                return true;
+            } else {
+                if (player.getDisplayName().equals(args[0])) {
+                    player.sendMessage(PREFIX + "Tenhle nick už máš");
+                } else {
+                    player.setDisplayName(args[0]);
+                    player.setCustomName(args[0]);
+                    player.setCustomNameVisible(true);
+                    player.sendMessage(PREFIX + "Nickname změněn na " + "§e" + args[0]);
+                }
+            }
+            return true;
+        }
+
+
+        if (command.getName().equalsIgnoreCase("kdoje")) {
+            if (args.length == 0) {
+                sender.sendMessage(PREFIX + "Musíš zadat jméno");
+            }
+            else {
+                Player nevimbro = Bukkit.getPlayerExact(args[0]);
+                if (nevimbro == null) {
+                    sender.sendMessage(PREFIX + "§e" + args[0] + " §7neni na serveru");
+                }
+                else {
+                    sender.sendMessage(" ");
+                    sender.sendMessage("§7Name: §e" + nevimbro.getName());
+                    sender.sendMessage("§7HP: §e" + (int)nevimbro.getHealth());
+                    sender.sendMessage("§7Gamemode: §e" + nevimbro.getGameMode());
+                    sender.sendMessage("§7Lokace: §e" + nevimbro.getWorld().getName() + " §7- §eX:" + (int)nevimbro.getLocation().getX() + " Y:" + (int)nevimbro.getLocation().getY() + " Z:" + (int)nevimbro.getLocation().getZ());
+                    sender.sendMessage("§7Ping: §e" + nevimbro.getPing());
+
+                }
+            }
+            return true;
+        }
+
+
 
         if (command.getName().equalsIgnoreCase("sinfo")) {
 
