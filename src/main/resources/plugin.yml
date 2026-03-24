@@ -12,6 +12,7 @@ commands:
   kdeje:
   nickos:
   kdoje:
+  portni:
 
 permissions:
   sinfo.use:

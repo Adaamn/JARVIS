@@ -38,6 +38,8 @@ public final class jarvis extends JavaPlugin implements Listener, TabCompleter {
         getCommand("jarvis").setTabCompleter(this);
         getCommand("kdoje").setTabCompleter(this);
         getCommand("kdeje").setTabCompleter(this);
+        registraceCommandu("portni");
+        getCommand("portni").setTabCompleter(this);
 
         getLogger().info("JARVIS is enabled.");
     }
@@ -136,6 +138,48 @@ public final class jarvis extends JavaPlugin implements Listener, TabCompleter {
                 } else {
                     sender.sendMessage("§e" + args[0] + " §7neni na serveru");
                 }
+            }
+            return true;
+        }
+
+
+        if (command.getName().equalsIgnoreCase("portni")) {
+            if (!(sender instanceof Player)) {
+                sender.sendMessage("Tohle může jenom hráč!");
+                return true;
+            }
+
+            Player player1 = (Player) sender;
+
+            if (args.length == 1) {
+                if (args[0].equals(player1.getName())) {
+                    player1.sendMessage(PREFIX + "Nemůžeš se teleportovat sám k sobě");
+                    return true;
+                }
+                Player player2 = Bukkit.getPlayerExact(args[0]);
+                if (player2 != null) {
+                    player1.teleport(player2);
+                    player1.sendMessage(PREFIX + "Teleportuju tě k §e" + args[0]);
+                    player2.sendMessage(PREFIX + "Teleportoval se na tebe §e" + player1.getName());
+                } else {
+                    player1.sendMessage(PREFIX + "§e" + args[0] + " §7neni na serveru");
+                }
+            } else if (args.length == 2) {
+                if (args[0].equals(args[1])) {
+                    player1.sendMessage(PREFIX + "Nemůžeš hráče teleportovat sám k sobě");
+                    return true;
+                }
+                Player player2 = Bukkit.getPlayerExact(args[0]);
+                Player player3 = Bukkit.getPlayerExact(args[1]);
+                if (player2 != null && player3 != null) {
+                    player2.teleport(player3);
+                    player2.sendMessage(PREFIX + "Teleportuju tě k §e" + args[1]);
+                    player3.sendMessage(PREFIX + "Teleportoval se na tebe §e" + args[0]);
+                } else {
+                    player1.sendMessage(PREFIX + "Někdo z hráčů neni na serveru");
+                }
+            } else {
+                player1.sendMessage(PREFIX + "Špatně zadané argumenty");
             }
             return true;
         }
@@ -364,6 +408,11 @@ public final class jarvis extends JavaPlugin implements Listener, TabCompleter {
         if (command.getName().equalsIgnoreCase("kdeje")) {
             return null;
         }
+
+        if (command.getName().equalsIgnoreCase("portni")) {
+            return null;
+        }
+
         return List.of();
     }
 
