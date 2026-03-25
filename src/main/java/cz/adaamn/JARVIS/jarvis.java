@@ -114,12 +114,13 @@ public final class jarvis extends JavaPlugin implements Listener, TabCompleter {
 */
 
 
+
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
 
         if (command.getName().equalsIgnoreCase("kdeje")) {
             if (args.length==0) {
-                sender.sendMessage("§7Musis zadat jmeno");
+                sender.sendMessage(PREFIX + "§7Musis zadat jmeno");
             }
             else {
                 Player player = Bukkit.getPlayerExact(args[0]);
